@@ -116,7 +116,7 @@ body {
 }
 
 #yes {
-    background: #ff4d6d;
+    background: linear-gradient(45deg, #ff4d6d, #ff6b8b);
     color: white;
 }
 
@@ -126,12 +126,15 @@ body {
 }
 
 #no {
-    background: #444;
+    background: rgba(255, 255, 255, 0.2);
     color: white;
-    position: absolute; /* عشان يتحرك بحرية */
     border: 2px solid white !important;
     position: relative !important;
-    transition: left 0.2s ease, top 0.2s ease;
+}
+
+#no:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
 }
 
 #no:hover {
@@ -562,5 +565,6 @@ window.onload = () => {
 </script>
 </body>
 </html>
+
 
 
