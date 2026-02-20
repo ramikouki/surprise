@@ -4,38 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthday Surprise</title>
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
 body{height:100vh;overflow:hidden;background:black;display:flex;justify-content:center;align-items:center;}
 
-/* STARS BACKGROUND */
-#stars{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:black;
-  z-index:0;
-}
-.star{
-  position:absolute;
-  width:2px; height:2px;
-  background:white;
-  border-radius:50%;
-  opacity:0.8;
-  animation:twinkle 2s infinite alternate;
-}
-@keyframes twinkle{
-  0%{opacity:0.3;}
-  100%{opacity:1;}
-}
-
-/* INTRO */
+/* INTRO SCREEN */
 #intro{
   position:absolute;width:100%;height:100%;background:black;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:28px;z-index:100;
 }
-#intro button{
-  padding:15px 35px;border:none;border-radius:30px;background:#ff4d6d;color:white;font-size:20px;cursor:pointer;margin-top:20px;
+#startBtn{
+  padding:15px 35px;border:none;border-radius:30px;background:#ff4d6d;color:white;font-size:20px;cursor:pointer;margin-top:20px;z-index:101;position:relative;
 }
 
 /* COUNTDOWN */
@@ -69,49 +47,29 @@ body{height:100vh;overflow:hidden;background:black;display:flex;justify-content:
 </head>
 <body>
 
-<!-- STARS -->
-<div id="stars"></div>
-
-<!-- INTRO -->
 <div id="intro">
   <h1>🎬 Ready for something special?</h1>
   <button id="startBtn">Start 🎁</button>
 </div>
 
-<!-- COUNTDOWN -->
 <div id="countdown">3</div>
 
-<!-- PAGE 1 -->
 <div id="page1">
   <h1>Are you ready for a surprise? 💖</h1>
   <button id="yes">Yes 😍</button>
   <button id="no">No 😅</button>
 </div>
 
-<!-- PAGE 2 -->
 <div id="page2">
   <div class="message" id="text"></div>
 </div>
 
-<!-- AUDIO -->
-<audio id="music" loop preload="auto" playsinline>
+<audio id="music" loop preload="auto">
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
-// STARS GENERATOR
-const starsContainer=document.getElementById('stars');
-for(let i=0;i<150;i++){
-  const star=document.createElement('div');
-  star.className='star';
-  star.style.top=Math.random()*100+'%';
-  star.style.left=Math.random()*100+'%';
-  star.style.width=1+Math.random()*2+'px';
-  star.style.height=1+Math.random()*2+'px';
-  starsContainer.appendChild(star);
-}
-
 // ELEMENTS
 const intro=document.getElementById("intro");
 const startBtn=document.getElementById("startBtn");
@@ -123,7 +81,7 @@ const page2=document.getElementById("page2");
 const text=document.getElementById("text");
 const music=document.getElementById("music");
 
-// MESSAGE EXACTLY
+// MESSAGE EXACT
 const msg=`Happy birthday aboura ❤️🥳️🎁
 nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️
 rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️
@@ -131,13 +89,16 @@ enjoy your happy day
 smile as much as you can cause you have the prettiest smile at all that i love so much❤️✨️💎
 and the red flower is that's how i see you🌹🌹`;
 
-// START BUTTON + MUSIC + COUNTDOWN
-startBtn.addEventListener("click", async ()=>{
-  try{await music.play();}catch(err){music.muted=true;await music.play();music.muted=false;}
+// START BUTTON CLICK
+startBtn.addEventListener("click", ()=>{
   intro.style.display="none";
   countdown.style.display="flex";
+
+  // START MUSIC AFTER INTERACTION
+  music.play().catch(()=>{music.muted=true;music.play();music.muted=false;});
+
   let count=3;
-  let interval=setInterval(()=>{
+  const interval=setInterval(()=>{
     countdown.innerHTML=count;
     count--;
     if(count<0){clearInterval(interval);countdown.style.display="none";page1.style.display="flex";}
@@ -148,10 +109,11 @@ startBtn.addEventListener("click", async ()=>{
 yes.onclick=()=>{
   page1.style.display="none";
   page2.style.display="flex";
+
   confetti({particleCount:400,spread:180,origin:{y:0.6}});
   createHearts();
   typeWriter();
-}
+};
 
 // NO ESCAPE
 no.addEventListener("mouseover",()=>{no.style.top=Math.random()*80+"%";no.style.left=Math.random()*80+"%";});
@@ -173,6 +135,5 @@ function createHearts(){
   },250);
 }
 </script>
-
 </body>
 </html>
