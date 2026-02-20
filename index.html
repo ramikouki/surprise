@@ -101,6 +101,7 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     position: relative;
+    min-height: 100px;
 }
 
 #page1 button {
@@ -127,6 +128,11 @@ body {
     background: #444;
     color: white;
     position: relative;
+    transition: left 0.2s ease, top 0.2s ease; /* حركة سلسة */
+}
+
+#no:hover {
+    background: #666;
 }
 
 /* PAGE 2 */
@@ -161,7 +167,7 @@ body {
     to { text-shadow: 0 0 50px #ff4d6d; }
 }
 
-/* Hearts - نسخة خفيفة */
+/* Hearts */
 .heart {
     position: absolute;
     color: #ff4d6d;
@@ -287,17 +293,18 @@ const musicControl = document.getElementById("musicControl");
 const surpriseBtn = document.getElementById("surpriseBtn");
 
 // MESSAGE
-const msg = `Happy birthday aboura❤️💜😍  
-nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️  
-rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️  
-enjoy your happy day  
-smile as much as you can cause you have the prettiest smile at all that i love so much❤️🌹🌹  
-and the red flower is that's how i see you✨✨`;
+const msg = `Happy birthday aboura ❤️🥳️🎁
+nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️
+rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️
+enjoy your happy day
+smile as much as you can cause you have the prettiest smile at all that i love so much❤️✨️💎
+and the red flower is that's how i see you🌹🌹`;
 
 // Music state
 let isMusicPlaying = false;
 let heartInterval = null;
 let typeTimer = null;
+let noMoveCount = 0;
 
 // Play music
 function playMusic() {
@@ -336,6 +343,11 @@ startBtn.addEventListener("click", () => {
             clearInterval(interval);
             countdown.style.display = "none";
             page1.style.display = "flex";
+            
+            // Reset no button position
+            no.style.position = "relative";
+            no.style.left = "0";
+            no.style.top = "0";
         }
     }, 1000);
 });
@@ -349,52 +361,90 @@ yes.onclick = () => {
     playMusic();
     musicControl.style.display = "block";
 
-    // Confetti (خفيف)
+    // Confetti
     confetti({ particleCount: 200, spread: 160, origin: { y: 0.6 } });
     
     setTimeout(() => {
         confetti({ particleCount: 100, spread: 100, origin: { y: 0.5, x: 0.3 } });
     }, 300);
 
-    // Hearts (أقل وأخف)
-    heartInterval = setInterval(createHeart, 400); // أبطأ من قبل
+    // Hearts
+    heartInterval = setInterval(createHeart, 400);
 
-    // Typewriter (محسّن)
+    // Typewriter - أبطأ (80ms)
     typeWriter();
     
     // Surprise button
     setTimeout(() => {
         surpriseBtn.style.display = "block";
-    }, 8000);
+    }, 15000);
 };
 
-// NO BUTTON
-let noClicks = 0;
+// NO BUTTON - يتحرك ولكن في حدود قريبة
 no.addEventListener("mouseover", () => {
-    if (noClicks < 5) {
-        const maxX = window.innerWidth - 150;
-        const maxY = window.innerHeight - 80;
+    if (noMoveCount < 8) { // يتحرك 8 مرات فقط
+        // مسافة صغيرة (ما تبعدش بزاف)
+        const moveX = (Math.random() * 60) - 30; // بين -30 و +30 بكسل
+        const moveY = (Math.random() * 40) - 20; // بين -20 و +20 بكسل
         
-        no.style.position = 'absolute';
-        no.style.left = Math.random() * maxX + 'px';
-        no.style.top = Math.random() * maxY + 'px';
-        noClicks++;
+        // نحافظ على الزر في مكانه النسبي
+        const currentLeft = parseFloat(no.style.left) || 0;
+        const currentTop = parseFloat(no.style.top) || 0;
+        
+        // نتأكد ما يخرجش من مساحة معقولة
+        let newLeft = currentLeft + moveX;
+        let newTop = currentTop + moveY;
+        
+        // نحدد المسافة القصوى (ما يبعدش أكثر من 100 بكسل)
+        newLeft = Math.max(-50, Math.min(50, newLeft));
+        newTop = Math.max(-40, Math.min(40, newTop));
+        
+        no.style.position = 'relative';
+        no.style.left = newLeft + 'px';
+        no.style.top = newTop + 'px';
+        
+        noMoveCount++;
+        
+        // تغيير النص بعد كم حركة
+        if (noMoveCount === 5) {
+            no.textContent = "Still no? 😅";
+        } else if (noMoveCount === 7) {
+            no.textContent = "Almost there! 😊";
+        }
     } else {
-        no.textContent = "Yes is better 😊";
+        // بعد 8 مرات، يوقف حركة ويدلك على Yes
+        no.textContent = "Click Yes! 💖";
         no.style.background = "#ff4d6d";
+        no.style.transform = "scale(1.1)";
+        
+        // ومضة للـ Yes
+        yes.style.transform = "scale(1.2)";
+        yes.style.boxShadow = "0 0 30px #ff4d6d";
+        setTimeout(() => {
+            yes.style.transform = "scale(1)";
+            yes.style.boxShadow = "none";
+        }, 500);
     }
 });
 
 no.onclick = () => {
-    if (noClicks < 5) {
-        alert("Try again! 😊");
+    if (noMoveCount < 8) {
+        // كونفيتي صغير
         confetti({ particleCount: 30, spread: 50, origin: { y: 0.5 } });
+        
+        // رسالة صغيرة
+        alert("Keep trying! 😊");
+        
+        // نحرك الزر شوي
+        noMoveCount = 6; // نجعله يقترب من النهاية
+        no.textContent = "Getting closer! 🎯";
     } else {
+        // بعد ما كمل حركاته، الضغط على no يشغل yes
         yes.click();
     }
 };
 
-// TYPEWRITER - نسخة محسنة وسريعة
+// TYPEWRITER - أبطأ (80ms)
 let i = 0;
 function typeWriter() {
     if (typeTimer) clearTimeout(typeTimer);
@@ -403,9 +453,8 @@ function typeWriter() {
         if (i < msg.length) {
             text.innerHTML += msg.charAt(i);
             i++;
-            typeTimer = setTimeout(writeNext, 15); // أسرع من قبل
+            typeTimer = setTimeout(writeNext, 80);
         } else {
-            // Confetti خفيف في النهاية
             confetti({ particleCount: 150, spread: 120, origin: { y: 0.6 } });
         }
     }
@@ -413,7 +462,7 @@ function typeWriter() {
     writeNext();
 }
 
-// HEART - نسخة خفيفة (قلب واحد كل مرة)
+// HEART
 function createHeart() {
     const heart = document.createElement('div');
     heart.className = 'heart';
@@ -424,7 +473,6 @@ function createHeart() {
     heart.style.color = '#ff4d6d';
     document.body.appendChild(heart);
     
-    // حذف تلقائي بعد انتهاء الأنيميشن
     setTimeout(() => {
         if (heart && heart.remove) heart.remove();
     }, 5000);
@@ -456,13 +504,12 @@ page2.onclick = () => {
     }
 };
 
-// تنظيف عند مغادرة الصفحة
+// تنظيف
 window.onbeforeunload = () => {
     if (heartInterval) clearInterval(heartInterval);
     if (typeTimer) clearTimeout(typeTimer);
 };
 
-// Preload
 window.onload = () => {
     console.log("🎉 Ready! 🎉");
 };
