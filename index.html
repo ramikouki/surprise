@@ -6,177 +6,113 @@
 <title>Birthday Surprise</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;}
+body{height:100vh;overflow:hidden;background:black;display:flex;justify-content:center;align-items:center;}
 
-body{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:url("image1.jpg") center/cover no-repeat;
-overflow:hidden;
-color:white;
+/* STARS BACKGROUND */
+#stars{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:black;
+  z-index:0;
+}
+.star{
+  position:absolute;
+  width:2px; height:2px;
+  background:white;
+  border-radius:50%;
+  opacity:0.8;
+  animation:twinkle 2s infinite alternate;
+}
+@keyframes twinkle{
+  0%{opacity:0.3;}
+  100%{opacity:1;}
 }
 
 /* INTRO */
-.intro{
-position:fixed;
-width:100%;
-height:100%;
-background:black;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:100;
+#intro{
+  position:absolute;width:100%;height:100%;background:black;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:28px;z-index:100;
 }
-
-.intro h1{
-font-size:28px;
-margin-bottom:30px;
-text-align:center;
-}
-
-.intro button{
-padding:15px 35px;
-border:none;
-border-radius:30px;
-background:#ff4d6d;
-color:white;
-font-size:20px;
-cursor:pointer;
+#intro button{
+  padding:15px 35px;border:none;border-radius:30px;background:#ff4d6d;color:white;font-size:20px;cursor:pointer;margin-top:20px;
 }
 
 /* COUNTDOWN */
-.countdown{
-position:fixed;
-width:100%;
-height:100%;
-background:black;
-display:none;
-justify-content:center;
-align-items:center;
-font-size:80px;
-z-index:90;
+#countdown{
+  position:absolute;width:100%;height:100%;background:black;color:white;display:none;justify-content:center;align-items:center;font-size:80px;z-index:90;
 }
 
 /* PAGE 1 */
-.container{
-display:none;
-background:rgba(0,0,0,0.65);
-padding:40px;
-border-radius:25px;
-text-align:center;
-position:relative;
+#page1{
+  display:none;position:absolute;width:100%;height:100%;background:url("image1.jpg") center/cover no-repeat;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:1;
 }
-
-button{
-padding:12px 25px;
-margin:10px;
-border:none;
-border-radius:30px;
-font-size:18px;
-cursor:pointer;
-transition:0.3s;
-}
-
-#yes{
-background:#ff4d6d;
-color:white;
-}
-
-#yes:hover{
-transform:scale(1.2);
-box-shadow:0 0 20px #ff4d6d;
-}
-
-#no{
-background:#444;
-color:white;
-position:absolute;
-}
+#page1 h1{color:white;font-size:32px;text-shadow:0 0 15px pink,0 0 30px red;margin-bottom:20px;}
+#page1 button{padding:12px 25px;margin:10px;border:none;border-radius:30px;font-size:18px;cursor:pointer;transition:0.3s;}
+#yes{background:#ff4d6d;color:white;}
+#yes:hover{transform:scale(1.2);box-shadow:0 0 25px #ff4d6d;}
+#no{background:#444;color:white;position:absolute;}
 
 /* PAGE 2 */
-.page2{
-display:none;
-height:100vh;
-width:100%;
-justify-content:center;
-align-items:center;
-background:url("image2.jpg") center/cover no-repeat;
-position:fixed;
-top:0;
-left:0;
+#page2{
+  display:none;position:absolute;width:100%;height:100%;background:url("image2.jpg") center/cover no-repeat;display:flex;justify-content:center;align-items:center;z-index:2;
 }
-
 .message{
-background:rgba(0,0,0,0.7);
-padding:30px;
-border-radius:25px;
-font-size:20px;
-line-height:1.7;
-white-space:pre-line;
-max-width:700px;
-animation:glow 2s infinite alternate;
+  background:rgba(0,0,0,0.75);padding:30px;border-radius:25px;color:white;font-size:20px;line-height:1.6;white-space:pre-line;max-width:700px;animation:glow 2s infinite alternate;
 }
-
-@keyframes glow{
-from{text-shadow:0 0 10px #ff4d6d;}
-to{text-shadow:0 0 25px #ff99aa;}
-}
+@keyframes glow{from{text-shadow:0 0 15px #ff4d6d;}to{text-shadow:0 0 35px #ff99aa;}}
 
 /* Hearts */
-.heart{
-position:absolute;
-color:red;
-animation:floatUp 4s linear infinite;
-}
-
-@keyframes floatUp{
-0%{transform:translateY(100vh);opacity:1;}
-100%{transform:translateY(-10vh);opacity:0;}
-}
-
+.heart{position:absolute;color:red;animation:floatUp 4s linear infinite;font-size:20px;}
+@keyframes floatUp{0%{transform:translateY(100vh);opacity:1;}100%{transform:translateY(-10vh);opacity:0;}}
 </style>
 </head>
-
 <body>
 
+<!-- STARS -->
+<div id="stars"></div>
+
 <!-- INTRO -->
-<div class="intro" id="intro">
-<h1>🎬 Ready for something special?</h1>
-<button id="startBtn">Start 🎁</button>
+<div id="intro">
+  <h1>🎬 Ready for something special?</h1>
+  <button id="startBtn">Start 🎁</button>
 </div>
 
 <!-- COUNTDOWN -->
-<div class="countdown" id="countdown">3</div>
+<div id="countdown">3</div>
 
 <!-- PAGE 1 -->
-<div class="container" id="page1">
-<h1>Are you ready for a surprise? 💖</h1>
-<button id="yes">Yes 😍</button>
-<button id="no">No 😅</button>
+<div id="page1">
+  <h1>Are you ready for a surprise? 💖</h1>
+  <button id="yes">Yes 😍</button>
+  <button id="no">No 😅</button>
 </div>
 
 <!-- PAGE 2 -->
-<div class="page2" id="page2">
-<div class="message" id="text"></div>
+<div id="page2">
+  <div class="message" id="text"></div>
 </div>
 
 <!-- AUDIO -->
-<audio id="music" loop preload="auto">
-<source src="music.mp3" type="audio/mpeg">
+<audio id="music" loop preload="auto" playsinline>
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
 <script>
+// STARS GENERATOR
+const starsContainer=document.getElementById('stars');
+for(let i=0;i<150;i++){
+  const star=document.createElement('div');
+  star.className='star';
+  star.style.top=Math.random()*100+'%';
+  star.style.left=Math.random()*100+'%';
+  star.style.width=1+Math.random()*2+'px';
+  star.style.height=1+Math.random()*2+'px';
+  starsContainer.appendChild(star);
+}
 
+// ELEMENTS
 const intro=document.getElementById("intro");
 const startBtn=document.getElementById("startBtn");
 const countdown=document.getElementById("countdown");
@@ -187,90 +123,55 @@ const page2=document.getElementById("page2");
 const text=document.getElementById("text");
 const music=document.getElementById("music");
 
-const msg=`Happy birthday aboura ❤️🥳🎂
+// MESSAGE EXACTLY
+const msg=`Happy birthday aboura ❤️🥳️🎁
+nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️
+rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️
+enjoy your happy day
+smile as much as you can cause you have the prettiest smile at all that i love so much❤️✨️💎
+and the red flower is that's how i see you🌹🌹`;
 
-nchalah btoul la3mor w rabi ywaf9ek ❤️
-
-rani far7an barcha eli rja3na s7ab ❤️❤️
-
-enjoy your happy day 💫
-
-you have the prettiest smile ❤️✨
-
-🌹🌹`;
-
-/* START CLICK */
+// START BUTTON + MUSIC + COUNTDOWN
 startBtn.addEventListener("click", async ()=>{
-
-try{
-await music.play();
-}catch(err){
-console.log("Autoplay blocked, retrying...");
-music.muted=true;
-await music.play();
-music.muted=false;
-}
-
-intro.style.display="none";
-countdown.style.display="flex";
-
-let count=3;
-
-let interval=setInterval(()=>{
-count--;
-if(count>0){
-countdown.innerHTML=count;
-}else{
-clearInterval(interval);
-countdown.style.display="none";
-page1.style.display="block";
-}
-},1000);
-
+  try{await music.play();}catch(err){music.muted=true;await music.play();music.muted=false;}
+  intro.style.display="none";
+  countdown.style.display="flex";
+  let count=3;
+  let interval=setInterval(()=>{
+    countdown.innerHTML=count;
+    count--;
+    if(count<0){clearInterval(interval);countdown.style.display="none";page1.style.display="flex";}
+  },1000);
 });
 
-/* YES CLICK */
+// YES CLICK
 yes.onclick=()=>{
-page1.style.display="none";
-page2.style.display="flex";
+  page1.style.display="none";
+  page2.style.display="flex";
+  confetti({particleCount:400,spread:180,origin:{y:0.6}});
+  createHearts();
+  typeWriter();
+}
 
-confetti({
-particleCount:400,
-spread:180,
-origin:{y:0.6}
-});
+// NO ESCAPE
+no.addEventListener("mouseover",()=>{no.style.top=Math.random()*80+"%";no.style.left=Math.random()*80+"%";});
 
-createHearts();
-typeWriter();
-};
-
-/* NO ESCAPE */
-no.addEventListener("mouseover",()=>{
-no.style.top=Math.random()*80+"%";
-no.style.left=Math.random()*80+"%";
-});
-
+// TYPEWRITER
 let i=0;
-function typeWriter(){
-if(i<msg.length){
-text.innerHTML+=msg.charAt(i);
-i++;
-setTimeout(typeWriter,30);
-}
-}
+function typeWriter(){if(i<msg.length){text.innerHTML+=msg.charAt(i);i++;setTimeout(typeWriter,25);}}
 
+// HEARTS
 function createHearts(){
-setInterval(()=>{
-let heart=document.createElement("div");
-heart.classList.add("heart");
-heart.innerHTML="❤️";
-heart.style.left=Math.random()*100+"vw";
-heart.style.fontSize=(20+Math.random()*30)+"px";
-document.body.appendChild(heart);
-setTimeout(()=>{heart.remove();},4000);
-},250);
+  setInterval(()=>{
+    const heart=document.createElement('div');
+    heart.className='heart';
+    heart.innerHTML='❤️';
+    heart.style.left=Math.random()*100+'vw';
+    heart.style.fontSize=(20+Math.random()*30)+'px';
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),4000);
+  },250);
 }
-
 </script>
 
 </body>
