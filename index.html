@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthday Surprise</title>
 
 <style>
@@ -22,17 +23,28 @@ transition:1s ease;
 overflow:hidden;
 }
 
+/* First Page */
 .container{
-background:rgba(0,0,0,0.6);
+background:rgba(0,0,0,0.65);
 padding:40px;
-border-radius:20px;
+border-radius:25px;
 text-align:center;
 color:white;
 animation:fadeIn 1.5s;
+transition:0.5s;
 }
 
 h1{
 margin-bottom:25px;
+font-size:30px;
+text-shadow:0 0 15px pink, 0 0 25px red;
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.07);}
+100%{transform:scale(1);}
 }
 
 button{
@@ -51,7 +63,8 @@ color:white;
 }
 
 #yes:hover{
-transform:scale(1.15);
+transform:scale(1.2);
+box-shadow:0 0 20px #ff4d6d;
 }
 
 #no{
@@ -60,6 +73,7 @@ color:white;
 position:absolute;
 }
 
+/* Second Page */
 .page2{
 display:none;
 height:100vh;
@@ -72,15 +86,21 @@ position:relative;
 }
 
 .message{
-background:rgba(0,0,0,0.6);
+background:rgba(0,0,0,0.65);
 padding:30px;
-border-radius:20px;
+border-radius:25px;
 color:white;
 font-size:20px;
 line-height:1.7;
 white-space:pre-line;
 max-width:700px;
 z-index:10;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{text-shadow:0 0 10px #ff4d6d;}
+to{text-shadow:0 0 25px #ff99aa;}
 }
 
 @keyframes fadeIn{
@@ -92,7 +112,6 @@ to{opacity:1;}
 .heart{
 position:absolute;
 color:red;
-font-size:20px;
 animation:floatUp 4s linear infinite;
 }
 
@@ -100,22 +119,28 @@ animation:floatUp 4s linear infinite;
 0%{transform:translateY(100vh);opacity:1;}
 100%{transform:translateY(-10vh);opacity:0;}
 }
+
+/* Mobile Fix */
+@media(max-width:600px){
+h1{font-size:22px;}
+.message{font-size:16px;padding:20px;}
+}
 </style>
 </head>
 
 <body>
 
 <div class="container" id="page1">
-<h1>Are you ready for surprise</h1>
-<button id="yes">Yes</button>
-<button id="no">No</button>
+<h1>Are you ready for a surprise? 🎁</h1>
+<button id="yes">Yes 💖</button>
+<button id="no">No 😅</button>
 </div>
 
 <div class="page2" id="page2">
 <div class="message" id="text"></div>
 </div>
 
-<audio id="music" src="music.mp3"></audio>
+<audio id="music" src="music.mp3" loop></audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -128,29 +153,36 @@ const page2=document.getElementById("page2");
 const text=document.getElementById("text");
 const music=document.getElementById("music");
 
-const msg=`Happy birthday aboura ❤️🥳️🎁
-nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️
-rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️
-enjoy your happy day
-smile as much as you can cause you have the prettiest smile at all that i love so much❤️✨️💎
-and the red flower is that's how i see you🌹🌹`;
+const msg=`Happy birthday aboura ❤️🥳🎂
+
+nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w rabi ywaf9ek ❤️
+
+rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra ❤️❤️
+
+enjoy your happy day 💫
+
+smile as much as you can cause you have the prettiest smile that I love so much ❤️✨💎
+
+and the red flower is that's how I see you 🌹🌹`;
 
 yes.onclick=()=>{
-document.body.style.background="none";
+page1.style.transform="scale(0)";
+setTimeout(()=>{
 page1.style.display="none";
 page2.style.display="flex";
 
-music.play();
+music.play().catch(()=>{});
 
 confetti({
-particleCount:200,
-spread:120,
+particleCount:300,
+spread:150,
 origin:{y:0.6}
 });
 
 createHearts();
-
 typeWriter();
+
+},500);
 };
 
 no.addEventListener("mouseover",()=>{
@@ -163,7 +195,7 @@ function typeWriter(){
 if(i<msg.length){
 text.innerHTML+=msg.charAt(i);
 i++;
-setTimeout(typeWriter,30);
+setTimeout(typeWriter,25);
 }
 }
 
@@ -173,14 +205,14 @@ let heart=document.createElement("div");
 heart.classList.add("heart");
 heart.innerHTML="❤️";
 heart.style.left=Math.random()*100+"vw";
-heart.style.fontSize=(20+Math.random()*20)+"px";
+heart.style.fontSize=(20+Math.random()*25)+"px";
 document.body.appendChild(heart);
 
 setTimeout(()=>{
 heart.remove();
 },4000);
 
-},300);
+},250);
 }
 
 </script>
