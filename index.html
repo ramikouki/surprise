@@ -47,23 +47,28 @@ body{height:100vh;overflow:hidden;background:black;display:flex;justify-content:
 </head>
 <body>
 
+<!-- INTRO -->
 <div id="intro">
   <h1>🎬 Ready for something special?</h1>
   <button id="startBtn">Start 🎁</button>
 </div>
 
+<!-- COUNTDOWN -->
 <div id="countdown">3</div>
 
+<!-- PAGE 1 -->
 <div id="page1">
   <h1>Are you ready for a surprise? 💖</h1>
   <button id="yes">Yes 😍</button>
   <button id="no">No 😅</button>
 </div>
 
+<!-- PAGE 2 -->
 <div id="page2">
   <div class="message" id="text"></div>
 </div>
 
+<!-- AUDIO -->
 <audio id="music" loop preload="auto">
   <source src="music.mp3" type="audio/mpeg">
 </audio>
@@ -101,7 +106,11 @@ startBtn.addEventListener("click", ()=>{
   const interval=setInterval(()=>{
     countdown.innerHTML=count;
     count--;
-    if(count<0){clearInterval(interval);countdown.style.display="none";page1.style.display="flex";}
+    if(count<0){
+      clearInterval(interval);
+      countdown.style.display="none";
+      page1.style.display="flex"; // <-- هنا page1 يظهر بعد العد
+    }
   },1000);
 });
 
