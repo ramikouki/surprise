@@ -135,7 +135,7 @@ body {
     background: #666;
 }
 
-/* PAGE 2 - مع إزالة الخلفية السوداء */
+/* PAGE 2 */
 #page2 {
     display: none;
     position: absolute;
@@ -148,22 +148,22 @@ body {
 }
 
 .message {
-    background: transparent; /* خلفية شفافة تماماً */
+    background: transparent;
     padding: 30px;
     border-radius: 25px;
-    color: #ff0000; /* أحمر صريح */
-    font-size: 26px; /* خط أكبر */
-    font-weight: bold; /* خط عريض */
+    color: #ff0000;
+    font-size: 26px;
+    font-weight: bold;
     line-height: 1.9;
     white-space: pre-line;
     max-width: 800px;
     margin: 20px;
     text-shadow: 
         0 0 20px rgba(255, 0, 0, 0.8),
-        0 0 40px rgba(255, 77, 109, 0.5); /* ظل أحمر */
+        0 0 40px rgba(255, 77, 109, 0.5);
     animation: glow 2s infinite alternate;
     letter-spacing: 0.5px;
-    -webkit-text-stroke: 0.5px rgba(255, 200, 200, 0.3); /* حدود خفيفة */
+    -webkit-text-stroke: 0.5px rgba(255, 200, 200, 0.3);
 }
 
 @keyframes glow {
@@ -241,21 +241,6 @@ body {
     box-shadow: 0 0 20px #ff4d6d;
 }
 
-/* Music Error */
-#musicError {
-    position: fixed;
-    bottom: 80px;
-    left: 20px;
-    background: rgba(0,0,0,0.8);
-    color: #ff4d6d;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 14px;
-    z-index: 1000;
-    display: none;
-    border-left: 4px solid #ff4d6d;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
     .message {
@@ -289,15 +274,14 @@ body {
     </div>
 </div>
 
-<!-- PAGE 2 - مع نص أحمر بدون خلفية -->
+<!-- PAGE 2 -->
 <div id="page2">
     <div class="message" id="text"></div>
 </div>
 
-<!-- Music Control -->
+<!-- Music Control (يظهر بعد ما تضغط Yes) -->
 <button id="musicControl">🔊 Music On</button>
 <button id="surpriseBtn">🎉 More Surprises 🎉</button>
-<div id="musicError">⚠️ Click anywhere to enable music</div>
 
 <!-- AUDIO -->
 <audio id="music" loop preload="auto">
@@ -320,9 +304,8 @@ const text = document.getElementById("text");
 const music = document.getElementById("music");
 const musicControl = document.getElementById("musicControl");
 const surpriseBtn = document.getElementById("surpriseBtn");
-const musicError = document.getElementById("musicError");
 
-// MESSAGE EXACT - نفس النص
+// MESSAGE
 const msg = `Happy birthday aboura❤️💜😍  
 nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️  
 rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️  
@@ -332,37 +315,27 @@ and the red flower is that's how i see you✨✨`;
 
 // Music state
 let isMusicPlaying = false;
-let musicEnabled = false;
 
-// Play music function
+// Function to play music
 function playMusic() {
-    if (!musicEnabled) {
-        musicEnabled = true;
-        musicError.style.display = "none";
-    }
-    
     music.volume = 0.5;
     
     let playPromise = music.play();
     
     if (playPromise !== undefined) {
         playPromise.then(() => {
-            console.log("Music playing");
+            console.log("🎵 Music started after Yes click");
             isMusicPlaying = true;
             musicControl.innerHTML = "🔊 Music On";
         }).catch(error => {
-            console.log("Music play failed");
+            console.log("Music play failed:", error);
             isMusicPlaying = false;
             musicControl.innerHTML = "🔇 Music Off";
-            musicError.style.display = "block";
-            setTimeout(() => {
-                musicError.style.display = "none";
-            }, 3000);
         });
     }
 }
 
-// Toggle music
+// Function to toggle music
 function toggleMusic() {
     if (isMusicPlaying) {
         music.pause();
@@ -373,26 +346,11 @@ function toggleMusic() {
     }
 }
 
-// Enable music on interaction
-function enableMusicOnInteraction() {
-    if (!musicEnabled) {
-        playMusic();
-    }
-    document.removeEventListener('click', enableMusicOnInteraction);
-    document.removeEventListener('touchstart', enableMusicOnInteraction);
-}
-
-document.addEventListener('click', enableMusicOnInteraction);
-document.addEventListener('touchstart', enableMusicOnInteraction);
-
 // START BUTTON
 startBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     intro.style.display = "none";
     countdown.style.display = "flex";
-    
-    musicControl.style.display = "block";
-    playMusic();
 
     let count = 3;
     const interval = setInterval(() => {
@@ -407,11 +365,17 @@ startBtn.addEventListener("click", (e) => {
     }, 1000);
 });
 
-// YES CLICK
+// YES CLICK - هنا الأغنية تبدا
 yes.onclick = (e) => {
     e.stopPropagation();
     page1.style.display = "none";
     page2.style.display = "flex";
+
+    // تشغيل الموسيقى هنا بعد الضغط على Yes
+    playMusic();
+    
+    // إظهار زر التحكم في الموسيقى
+    musicControl.style.display = "block";
 
     // Confetti
     confetti({ particleCount: 400, spread: 180, origin: { y: 0.6 } });
@@ -460,7 +424,7 @@ no.onclick = (e) => {
     }
 };
 
-// TYPEWRITER - مع النص الجديد
+// TYPEWRITER
 let i = 0;
 function typeWriter() {
     if (i < msg.length) {
