@@ -19,32 +19,60 @@ display:flex;
 justify-content:center;
 align-items:center;
 background:url("image1.jpg") center/cover no-repeat;
-transition:1s ease;
 overflow:hidden;
+color:white;
 }
 
-/* First Page */
+/* INTRO SCREEN */
+.intro{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:100;
+}
+
+.intro h1{
+font-size:28px;
+margin-bottom:30px;
+text-align:center;
+}
+
+.intro button{
+padding:15px 35px;
+border:none;
+border-radius:30px;
+background:#ff4d6d;
+color:white;
+font-size:20px;
+cursor:pointer;
+}
+
+/* COUNTDOWN */
+.countdown{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:none;
+justify-content:center;
+align-items:center;
+font-size:80px;
+z-index:90;
+animation:fadeIn 1s;
+}
+
+/* FIRST PAGE */
 .container{
+display:none;
 background:rgba(0,0,0,0.65);
 padding:40px;
 border-radius:25px;
 text-align:center;
-color:white;
-animation:fadeIn 1.5s;
-transition:0.5s;
-}
-
-h1{
-margin-bottom:25px;
-font-size:30px;
-text-shadow:0 0 15px pink, 0 0 25px red;
-animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-0%{transform:scale(1);}
-50%{transform:scale(1.07);}
-100%{transform:scale(1);}
 }
 
 button{
@@ -73,7 +101,7 @@ color:white;
 position:absolute;
 }
 
-/* Second Page */
+/* SECOND PAGE */
 .page2{
 display:none;
 height:100vh;
@@ -81,20 +109,19 @@ width:100%;
 justify-content:center;
 align-items:center;
 background:url("image2.jpg") center/cover no-repeat;
-animation:fadeIn 2s;
-position:relative;
+position:fixed;
+top:0;
+left:0;
 }
 
 .message{
-background:rgba(0,0,0,0.65);
+background:rgba(0,0,0,0.7);
 padding:30px;
 border-radius:25px;
-color:white;
 font-size:20px;
 line-height:1.7;
 white-space:pre-line;
 max-width:700px;
-z-index:10;
 animation:glow 2s infinite alternate;
 }
 
@@ -120,71 +147,98 @@ animation:floatUp 4s linear infinite;
 100%{transform:translateY(-10vh);opacity:0;}
 }
 
-/* Mobile Fix */
-@media(max-width:600px){
-h1{font-size:22px;}
-.message{font-size:16px;padding:20px;}
-}
 </style>
 </head>
 
 <body>
 
+<!-- INTRO -->
+<div class="intro" id="intro">
+<h1>🎬 Ready for something special?</h1>
+<button id="startBtn">Start 🎁</button>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown" id="countdown">3</div>
+
+<!-- FIRST PAGE -->
 <div class="container" id="page1">
-<h1>Are you ready for a surprise? 🎁</h1>
-<button id="yes">Yes 💖</button>
+<h1>Are you ready for a surprise? 💖</h1>
+<button id="yes">Yes 😍</button>
 <button id="no">No 😅</button>
 </div>
 
+<!-- SECOND PAGE -->
 <div class="page2" id="page2">
 <div class="message" id="text"></div>
 </div>
 
-<audio id="music" src="music.mp3" loop></audio>
+<audio id="music" src="music.mp3" loop preload="auto" playsinline></audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
 
+const intro=document.getElementById("intro");
+const startBtn=document.getElementById("startBtn");
+const countdown=document.getElementById("countdown");
+const page1=document.getElementById("page1");
 const yes=document.getElementById("yes");
 const no=document.getElementById("no");
-const page1=document.getElementById("page1");
 const page2=document.getElementById("page2");
 const text=document.getElementById("text");
 const music=document.getElementById("music");
 
 const msg=`Happy birthday aboura ❤️🥳🎂
 
-nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w rabi ywaf9ek ❤️
+nchalah btoul la3mor w rabi ywaf9ek ❤️
 
-rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra ❤️❤️
+rani far7an 3ale5er eli rja3na s7ab ❤️❤️
 
 enjoy your happy day 💫
 
-smile as much as you can cause you have the prettiest smile that I love so much ❤️✨💎
+you have the prettiest smile ❤️✨
 
-and the red flower is that's how I see you 🌹🌹`;
+🌹🌹`;
 
+/* INTRO START */
+startBtn.onclick=()=>{
+music.currentTime=0;
+music.play();
+
+intro.style.display="none";
+countdown.style.display="flex";
+
+let count=3;
+
+let interval=setInterval(()=>{
+count--;
+if(count>0){
+countdown.innerHTML=count;
+}else{
+clearInterval(interval);
+countdown.style.display="none";
+page1.style.display="block";
+}
+},1000);
+};
+
+/* YES CLICK */
 yes.onclick=()=>{
-page1.style.transform="scale(0)";
-setTimeout(()=>{
 page1.style.display="none";
 page2.style.display="flex";
 
-music.play().catch(()=>{});
-
 confetti({
-particleCount:300,
-spread:150,
+particleCount:400,
+spread:180,
 origin:{y:0.6}
 });
 
 createHearts();
 typeWriter();
-
-},500);
 };
 
+/* NO BUTTON ESCAPE */
 no.addEventListener("mouseover",()=>{
 no.style.top=Math.random()*80+"%";
 no.style.left=Math.random()*80+"%";
@@ -195,7 +249,7 @@ function typeWriter(){
 if(i<msg.length){
 text.innerHTML+=msg.charAt(i);
 i++;
-setTimeout(typeWriter,25);
+setTimeout(typeWriter,30);
 }
 }
 
@@ -205,13 +259,9 @@ let heart=document.createElement("div");
 heart.classList.add("heart");
 heart.innerHTML="❤️";
 heart.style.left=Math.random()*100+"vw";
-heart.style.fontSize=(20+Math.random()*25)+"px";
+heart.style.fontSize=(20+Math.random()*30)+"px";
 document.body.appendChild(heart);
-
-setTimeout(()=>{
-heart.remove();
-},4000);
-
+setTimeout(()=>{heart.remove();},4000);
 },250);
 }
 
