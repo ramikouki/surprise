@@ -44,8 +44,6 @@ body {
     font-size: 20px;
     cursor: pointer;
     margin-top: 20px;
-    z-index: 101;
-    position: relative;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -131,10 +129,6 @@ body {
     position: relative;
 }
 
-#no:hover {
-    background: #666;
-}
-
 /* PAGE 2 */
 #page2 {
     display: none;
@@ -158,28 +152,24 @@ body {
     white-space: pre-line;
     max-width: 800px;
     margin: 20px;
-    text-shadow: 
-        0 0 20px rgba(255, 0, 0, 0.8),
-        0 0 40px rgba(255, 77, 109, 0.5);
-    animation: glow 2s infinite alternate;
-    letter-spacing: 0.5px;
-    -webkit-text-stroke: 0.5px rgba(255, 200, 200, 0.3);
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    animation: glow 3s infinite alternate;
 }
 
 @keyframes glow {
-    from { text-shadow: 0 0 25px #ff3333, 0 0 50px #ff4d6d; }
-    to { text-shadow: 0 0 40px #ff6666, 0 0 70px #ff9999, 0 0 100px #ff4d6d; }
+    from { text-shadow: 0 0 25px #ff3333; }
+    to { text-shadow: 0 0 50px #ff4d6d; }
 }
 
-/* Hearts */
+/* Hearts - نسخة خفيفة */
 .heart {
     position: absolute;
     color: #ff4d6d;
-    animation: floatUp 4s linear infinite;
+    animation: floatUp 4s linear forwards;
     font-size: 20px;
     z-index: 999;
     pointer-events: none;
-    filter: drop-shadow(0 0 10px rgba(255, 77, 109, 0.8));
+    will-change: transform, opacity;
 }
 
 @keyframes floatUp {
@@ -198,7 +188,7 @@ body {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background: rgba(255, 77, 109, 0.9);
+    background: #ff4d6d;
     color: white;
     border: none;
     border-radius: 50px;
@@ -207,13 +197,10 @@ body {
     cursor: pointer;
     z-index: 1000;
     display: none;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.3);
-    transition: all 0.3s;
+    transition: 0.3s;
 }
 
 #musicControl:hover {
-    background: #ff4d6d;
     transform: scale(1.05);
     box-shadow: 0 0 20px #ff4d6d;
 }
@@ -232,8 +219,7 @@ body {
     cursor: pointer;
     z-index: 1000;
     display: none;
-    transition: all 0.3s;
-    border: 1px solid rgba(255,255,255,0.3);
+    transition: 0.3s;
 }
 
 #surpriseBtn:hover {
@@ -246,10 +232,6 @@ body {
     .message {
         font-size: 20px;
         padding: 20px;
-    }
-    
-    #page1 h1 {
-        font-size: 26px;
     }
 }
 </style>
@@ -279,7 +261,7 @@ body {
     <div class="message" id="text"></div>
 </div>
 
-<!-- Music Control (يظهر بعد ما تضغط Yes) -->
+<!-- Buttons -->
 <button id="musicControl">🔊 Music On</button>
 <button id="surpriseBtn">🎉 More Surprises 🎉</button>
 
@@ -287,7 +269,6 @@ body {
 <audio id="music" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
     <source src="music.mp3.mp3" type="audio/mpeg">
-    Your browser does not support audio.
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -315,27 +296,22 @@ and the red flower is that's how i see you✨✨`;
 
 // Music state
 let isMusicPlaying = false;
+let heartInterval = null;
+let typeTimer = null;
 
-// Function to play music
+// Play music
 function playMusic() {
     music.volume = 0.5;
-    
-    let playPromise = music.play();
-    
-    if (playPromise !== undefined) {
-        playPromise.then(() => {
-            console.log("🎵 Music started after Yes click");
-            isMusicPlaying = true;
-            musicControl.innerHTML = "🔊 Music On";
-        }).catch(error => {
-            console.log("Music play failed:", error);
-            isMusicPlaying = false;
-            musicControl.innerHTML = "🔇 Music Off";
-        });
-    }
+    music.play().then(() => {
+        isMusicPlaying = true;
+        musicControl.innerHTML = "🔊 Music On";
+    }).catch(() => {
+        isMusicPlaying = false;
+        musicControl.innerHTML = "🔇 Music Off";
+    });
 }
 
-// Function to toggle music
+// Toggle music
 function toggleMusic() {
     if (isMusicPlaying) {
         music.pause();
@@ -347,8 +323,7 @@ function toggleMusic() {
 }
 
 // START BUTTON
-startBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
+startBtn.addEventListener("click", () => {
     intro.style.display = "none";
     countdown.style.display = "flex";
 
@@ -365,48 +340,44 @@ startBtn.addEventListener("click", (e) => {
     }, 1000);
 });
 
-// YES CLICK - هنا الأغنية تبدا
-yes.onclick = (e) => {
-    e.stopPropagation();
+// YES CLICK
+yes.onclick = () => {
     page1.style.display = "none";
     page2.style.display = "flex";
 
-    // تشغيل الموسيقى هنا بعد الضغط على Yes
+    // Music
     playMusic();
-    
-    // إظهار زر التحكم في الموسيقى
     musicControl.style.display = "block";
 
-    // Confetti
-    confetti({ particleCount: 400, spread: 180, origin: { y: 0.6 } });
+    // Confetti (خفيف)
+    confetti({ particleCount: 200, spread: 160, origin: { y: 0.6 } });
     
     setTimeout(() => {
-        confetti({ particleCount: 200, spread: 100, origin: { y: 0.5, x: 0.3 } });
-        confetti({ particleCount: 200, spread: 100, origin: { y: 0.5, x: 0.7 } });
-    }, 500);
+        confetti({ particleCount: 100, spread: 100, origin: { y: 0.5, x: 0.3 } });
+    }, 300);
 
-    createHearts();
+    // Hearts (أقل وأخف)
+    heartInterval = setInterval(createHeart, 400); // أبطأ من قبل
+
+    // Typewriter (محسّن)
     typeWriter();
     
+    // Surprise button
     setTimeout(() => {
         surpriseBtn.style.display = "block";
-    }, msg.length * 30 + 1000);
+    }, 8000);
 };
 
 // NO BUTTON
 let noClicks = 0;
-no.addEventListener("mouseover", (e) => {
+no.addEventListener("mouseover", () => {
     if (noClicks < 5) {
-        const maxX = window.innerWidth - no.offsetWidth - 50;
-        const maxY = window.innerHeight - no.offsetHeight - 50;
-        
-        const randomX = Math.max(20, Math.min(maxX, Math.random() * maxX));
-        const randomY = Math.max(20, Math.min(maxY, Math.random() * maxY));
+        const maxX = window.innerWidth - 150;
+        const maxY = window.innerHeight - 80;
         
         no.style.position = 'absolute';
-        no.style.left = randomX + 'px';
-        no.style.top = randomY + 'px';
-        
+        no.style.left = Math.random() * maxX + 'px';
+        no.style.top = Math.random() * maxY + 'px';
         noClicks++;
     } else {
         no.textContent = "Yes is better 😊";
@@ -414,46 +385,49 @@ no.addEventListener("mouseover", (e) => {
     }
 });
 
-no.onclick = (e) => {
-    e.stopPropagation();
+no.onclick = () => {
     if (noClicks < 5) {
         alert("Try again! 😊");
-        confetti({ particleCount: 50, spread: 50, origin: { y: 0.5 } });
+        confetti({ particleCount: 30, spread: 50, origin: { y: 0.5 } });
     } else {
         yes.click();
     }
 };
 
-// TYPEWRITER
+// TYPEWRITER - نسخة محسنة وسريعة
 let i = 0;
 function typeWriter() {
-    if (i < msg.length) {
-        text.innerHTML += msg.charAt(i);
-        i++;
-        setTimeout(typeWriter, 30);
-    } else {
-        confetti({ particleCount: 300, spread: 160, origin: { y: 0.6 } });
+    if (typeTimer) clearTimeout(typeTimer);
+    
+    function writeNext() {
+        if (i < msg.length) {
+            text.innerHTML += msg.charAt(i);
+            i++;
+            typeTimer = setTimeout(writeNext, 15); // أسرع من قبل
+        } else {
+            // Confetti خفيف في النهاية
+            confetti({ particleCount: 150, spread: 120, origin: { y: 0.6 } });
+        }
     }
+    
+    writeNext();
 }
 
-// HEARTS
-function createHearts() {
-    setInterval(() => {
-        for (let j = 0; j < 3; j++) {
-            setTimeout(() => {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.innerHTML = '❤️';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.fontSize = (15 + Math.random() * 30) + 'px';
-                heart.style.animationDuration = (3 + Math.random() * 3) + 's';
-                heart.style.color = ['#ff4d6d', '#ff3333', '#ff6666'][Math.floor(Math.random() * 3)];
-                document.body.appendChild(heart);
-                
-                setTimeout(() => heart.remove(), 6000);
-            }, j * 100);
-        }
-    }, 250);
+// HEART - نسخة خفيفة (قلب واحد كل مرة)
+function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerHTML = '❤️';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = (15 + Math.random() * 25) + 'px';
+    heart.style.animationDuration = (3 + Math.random() * 2) + 's';
+    heart.style.color = '#ff4d6d';
+    document.body.appendChild(heart);
+    
+    // حذف تلقائي بعد انتهاء الأنيميشن
+    setTimeout(() => {
+        if (heart && heart.remove) heart.remove();
+    }, 5000);
 }
 
 // MUSIC CONTROL
@@ -463,33 +437,34 @@ musicControl.onclick = (e) => {
 };
 
 // SURPRISE BUTTON
-surpriseBtn.onclick = (e) => {
-    e.stopPropagation();
-    for (let i = 0; i < 5; i++) {
+surpriseBtn.onclick = () => {
+    for (let i = 0; i < 3; i++) {
         setTimeout(() => {
             confetti({
-                particleCount: 100,
-                spread: 120,
-                origin: { y: 0.6, x: i * 0.2 }
+                particleCount: 70,
+                spread: 100,
+                origin: { y: 0.6, x: 0.2 + (i * 0.3) }
             });
-        }, i * 200);
+        }, i * 150);
     }
 };
 
 // PAGE 2 click
-page2.onclick = (e) => {
+page2.onclick = () => {
     if (page2.style.display === "flex") {
-        confetti({ particleCount: 50, spread: 80, origin: { y: 0.5 } });
+        confetti({ particleCount: 30, spread: 60, origin: { y: 0.5 } });
     }
 };
 
-// Preload images
+// تنظيف عند مغادرة الصفحة
+window.onbeforeunload = () => {
+    if (heartInterval) clearInterval(heartInterval);
+    if (typeTimer) clearTimeout(typeTimer);
+};
+
+// Preload
 window.onload = () => {
-    const img1 = new Image();
-    img1.src = "image1.jpg";
-    const img2 = new Image();
-    img2.src = "image2.jpg";
-    console.log("🎉 Birthday Surprise Ready! 🎉");
+    console.log("🎉 Ready! 🎉");
 };
 </script>
 </body>
