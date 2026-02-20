@@ -130,9 +130,8 @@ body {
 #no {
     background: #444;
     color: white;
-    position: relative; /* عشان يتحرك بحرية */
-    transition: left 0.5s ease, top 0.5s ease;
-    z-index: 5;
+    position: absolute; /* عشان يتحرك بحرية */
+    transition: left 0.2s ease, top 0.2s ease;
 }
 
 #no:hover {
@@ -145,7 +144,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: url("image3.jpg") center/cover no-repeat; /* تغيير لـ image3 */
+    background: url("image3.jpg") center/cover no-repeat;
     justify-content: center;
     align-items: center;
     z-index: 2;
@@ -155,20 +154,33 @@ body {
     background: transparent;
     padding: 30px;
     border-radius: 25px;
-    color: #ff0000;
+    color: #ffffff;
     font-size: 26px;
     font-weight: bold;
     line-height: 1.9;
     white-space: pre-line;
     max-width: 800px;
     margin: 20px;
-    text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    text-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.8),
+        0 0 40px #ff4d6d,
+        0 0 60px #ff99aa;
     animation: glow 3s infinite alternate;
 }
 
 @keyframes glow {
-    from { text-shadow: 0 0 25px #ff3333; }
-    to { text-shadow: 0 0 50px #ff4d6d; }
+    from { 
+        text-shadow: 
+            0 0 25px #ffffff, 
+            0 0 50px #ff4d6d,
+            0 0 70px #ff99aa; 
+    }
+    to { 
+        text-shadow: 
+            0 0 40px #ffffff, 
+            0 0 70px #ff6b8b,
+            0 0 90px #ffb6c1; 
+    }
 }
 
 /* Hearts */
@@ -266,7 +278,7 @@ body {
     </div>
 </div>
 
-<!-- PAGE 2 - باستخدام image3 -->
+<!-- PAGE 2 -->
 <div id="page2">
     <div class="message" id="text"></div>
 </div>
@@ -309,7 +321,6 @@ let isMusicPlaying = false;
 let heartInterval = null;
 let typeTimer = null;
 let noMoveCount = 0;
-let noPosition = { x: 0, y: 0 };
 
 // Play music
 function playMusic() {
@@ -349,11 +360,15 @@ startBtn.addEventListener("click", () => {
             countdown.style.display = "none";
             page1.style.display = "flex";
             
-            // Reset no button position
-            no.style.position = "absolute";
-            no.style.left = "50%";
-            no.style.top = "50%";
-            no.style.transform = "translate(-50%, -50%)";
+            // وضع زر No في مكانه الأصلي - مباشرة بعد Page1 تظهر
+            setTimeout(() => {
+                const yesRect = yes.getBoundingClientRect();
+                no.style.position = 'absolute';
+                no.style.left = (yesRect.right + 20) + 'px'; // على يمين Yes بمسافة 20px
+                no.style.top = yesRect.top + 'px';
+                no.style.transform = 'none';
+                console.log("No button placed next to Yes");
+            }, 100); // تأخير صغير عشان التأكد أن Page1 ظهرت
         }
     }, 1000);
 });
@@ -386,22 +401,26 @@ yes.onclick = () => {
     }, 15000);
 };
 
-// NO BUTTON - يتحرك في مساحة أكبر (كل الشاشة)
+// NO BUTTON - يتحرك في مساحة ±100 بكسل
 no.addEventListener("mouseover", () => {
-    if (noMoveCount < 20) { // يتحرك 20 مرة (أكثر من قبل)
+    if (noMoveCount < 20) {
         
-        // نحسب مساحة آمنة للحركة (نترك مسافة 50px من الحواف)
-        const maxX = window.innerWidth - no.offsetWidth - 50;
-        const maxY = window.innerHeight - no.offsetHeight - 50;
+        // الموقع الحالي للزر
+        const currentLeft = parseFloat(no.style.left) || (yes.getBoundingClientRect().right + 20);
+        const currentTop = parseFloat(no.style.top) || yes.getBoundingClientRect().top;
         
-        // مسافة عشوائية في كل الشاشة
-        const randomX = 50 + Math.random() * maxX;
-        const randomY = 50 + Math.random() * maxY;
+        // مساحة ±100 من الموقع الحالي
+        const randomX = currentLeft + (Math.random() * 200 - 100);
+        const randomY = currentTop + (Math.random() * 200 - 100);
+        
+        // نتأكد ما يخرجش من الشاشة
+        const safeX = Math.max(20, Math.min(window.innerWidth - no.offsetWidth - 20, randomX));
+        const safeY = Math.max(20, Math.min(window.innerHeight - no.offsetHeight - 20, randomY));
         
         no.style.position = 'absolute';
-        no.style.left = randomX + 'px';
-        no.style.top = randomY + 'px';
-        no.style.transform = 'none'; // نلغي التحويل
+        no.style.left = safeX + 'px';
+        no.style.top = safeY + 'px';
+        no.style.transform = 'none';
         
         noMoveCount++;
         
@@ -451,14 +470,18 @@ no.onclick = () => {
             alert("Keep trying! 😊");
         }
         
-        // نحرك الزر لمكان عشوائي
-        const maxX = window.innerWidth - no.offsetWidth - 50;
-        const maxY = window.innerHeight - no.offsetHeight - 50;
-        const randomX = 50 + Math.random() * maxX;
-        const randomY = 50 + Math.random() * maxY;
+        // نحرك الزر في مساحة ±100 من موقعه الحالي
+        const currentLeft = parseFloat(no.style.left);
+        const currentTop = parseFloat(no.style.top);
         
-        no.style.left = randomX + 'px';
-        no.style.top = randomY + 'px';
+        const randomX = currentLeft + (Math.random() * 200 - 100);
+        const randomY = currentTop + (Math.random() * 200 - 100);
+        
+        const safeX = Math.max(20, Math.min(window.innerWidth - no.offsetWidth - 20, randomX));
+        const safeY = Math.max(20, Math.min(window.innerHeight - no.offsetHeight - 20, randomY));
+        
+        no.style.left = safeX + 'px';
+        no.style.top = safeY + 'px';
         
     } else {
         // بعد ما كمل حركاته، الضغط على no يشغل yes
@@ -538,4 +561,3 @@ window.onload = () => {
 </script>
 </body>
 </html>
-
