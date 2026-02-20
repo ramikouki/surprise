@@ -116,30 +116,26 @@ body {
 }
 
 #yes {
-    background: linear-gradient(45deg, #ff4d6d, #ff6b8b);
+    background: #ff4d6d;
     color: white;
+    position: relative;
+    z-index: 10;
 }
 
 #yes:hover {
-    transform: scale(1.15);
-    box-shadow: 0 0 30px #ff4d6d;
+    transform: scale(1.2);
+    box-shadow: 0 0 25px #ff4d6d;
 }
 
 #no {
-    background: rgba(255, 255, 255, 0.2);
+    background: #444;
     color: white;
-    border: 2px solid white !important;
-    position: relative !important;
-}
-
-#no:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
+    position: absolute; /* عشان يتحرك بحرية */
+    transition: left 0.2s ease, top 0.2s ease;
 }
 
 #no:hover {
     background: #666;
-    transform: scale(1.05);
 }
 
 /* PAGE 2 - مع الصورة image3 */
@@ -565,6 +561,3 @@ window.onload = () => {
 </script>
 </body>
 </html>
-
-
-
