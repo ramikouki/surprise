@@ -5,52 +5,256 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthday Surprise</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
-body{height:100vh;overflow:hidden;background:black;display:flex;justify-content:center;align-items:center;}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: black;
+}
 
 /* INTRO SCREEN */
-#intro{
-  position:absolute;width:100%;height:100%;background:black;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:28px;z-index:100;
+#intro {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    z-index: 100;
+    text-align: center;
+    padding: 20px;
 }
-#startBtn{
-  padding:15px 35px;border:none;border-radius:30px;background:#ff4d6d;color:white;font-size:20px;cursor:pointer;margin-top:20px;z-index:101;position:relative;
+
+#startBtn {
+    padding: 15px 35px;
+    border: none;
+    border-radius: 30px;
+    background: #ff4d6d;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 20px;
+    z-index: 101;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#startBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px #ff4d6d;
 }
 
 /* COUNTDOWN */
-#countdown{
-  position:absolute;width:100%;height:100%;background:black;color:white;display:none;justify-content:center;align-items:center;font-size:80px;z-index:90;
+#countdown {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 80px;
+    z-index: 90;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 /* PAGE 1 */
-#page1{
-  display:none;position:absolute;width:100%;height:100%;background:url("image1.jpg") center/cover no-repeat;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:1;
+#page1 {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url("image1.jpg") center/cover no-repeat;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
 }
-#page1 h1{color:white;font-size:32px;text-shadow:0 0 15px pink,0 0 30px red;margin-bottom:20px;}
-#page1 button{padding:12px 25px;margin:10px;border:none;border-radius:30px;font-size:18px;cursor:pointer;transition:0.3s;}
-#yes{background:#ff4d6d;color:white;}
-#yes:hover{transform:scale(1.2);box-shadow:0 0 25px #ff4d6d;}
-#no{background:#444;color:white;position:absolute;}
+
+#page1 h1 {
+    color: white;
+    font-size: 32px;
+    text-shadow: 0 0 15px pink, 0 0 30px red;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.button-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+}
+
+#page1 button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    min-width: 120px;
+}
+
+#yes {
+    background: #ff4d6d;
+    color: white;
+}
+
+#yes:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 25px #ff4d6d;
+}
+
+#no {
+    background: #444;
+    color: white;
+    position: relative;
+}
+
+#no:hover {
+    background: #666;
+}
 
 /* PAGE 2 */
-#page2{
-  display:none;position:absolute;width:100%;height:100%;background:url("image2.jpg") center/cover no-repeat;display:flex;justify-content:center;align-items:center;z-index:2;
+#page2 {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url("image2.jpg") center/cover no-repeat;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
 }
-.message{
-  background:rgba(0,0,0,0.75);padding:30px;border-radius:25px;color:white;font-size:20px;line-height:1.6;white-space:pre-line;max-width:700px;animation:glow 2s infinite alternate;
+
+.message {
+    background: rgba(0, 0, 0, 0.75);
+    padding: 30px;
+    border-radius: 25px;
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+    white-space: pre-line;
+    max-width: 700px;
+    margin: 20px;
+    animation: glow 2s infinite alternate;
 }
-@keyframes glow{from{text-shadow:0 0 15px #ff4d6d;}to{text-shadow:0 0 35px #ff99aa;}}
+
+@keyframes glow {
+    from { text-shadow: 0 0 15px #ff4d6d; }
+    to { text-shadow: 0 0 35px #ff99aa; }
+}
 
 /* Hearts */
-.heart{position:absolute;color:red;animation:floatUp 4s linear infinite;font-size:20px;}
-@keyframes floatUp{0%{transform:translateY(100vh);opacity:1;}100%{transform:translateY(-10vh);opacity:0;}}
+.heart {
+    position: absolute;
+    color: red;
+    animation: floatUp 4s linear infinite;
+    font-size: 20px;
+    z-index: 999;
+    pointer-events: none;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Music Controls */
+#musicControl {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(255, 77, 109, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1000;
+    display: none;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: all 0.3s;
+}
+
+#musicControl:hover {
+    background: #ff4d6d;
+    transform: scale(1.05);
+}
+
+/* Surprise Button */
+#surpriseBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 25px;
+    background: #ff4d6d;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1000;
+    display: none;
+    transition: all 0.3s;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+#surpriseBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #ff4d6d;
+}
+
+/* Error message */
+#musicError {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    background: rgba(0,0,0,0.8);
+    color: #ff4d6d;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    z-index: 1000;
+    display: none;
+    border-left: 4px solid #ff4d6d;
+}
 </style>
 </head>
 <body>
 
 <!-- INTRO -->
 <div id="intro">
-  <h1>🎬 Ready for something special?</h1>
-  <button id="startBtn">Start 🎁</button>
+    <h1>🎬 Ready for something special?</h1>
+    <button id="startBtn">Start 🎁</button>
 </div>
 
 <!-- COUNTDOWN -->
@@ -58,91 +262,288 @@ body{height:100vh;overflow:hidden;background:black;display:flex;justify-content:
 
 <!-- PAGE 1 -->
 <div id="page1">
-  <h1>Are you ready for a surprise? 💖</h1>
-  <button id="yes">Yes 😍</button>
-  <button id="no">No 😅</button>
+    <h1>Are you ready for a surprise? 💖</h1>
+    <div class="button-container">
+        <button id="yes">Yes 😍</button>
+        <button id="no">No 😅</button>
+    </div>
 </div>
 
 <!-- PAGE 2 -->
 <div id="page2">
-  <div class="message" id="text"></div>
+    <div class="message" id="text"></div>
 </div>
+
+<!-- Music Control Button -->
+<button id="musicControl">🔊 Music On</button>
+
+<!-- Surprise Button -->
+<button id="surpriseBtn">🎉 More Surprises 🎉</button>
+
+<!-- Music Error Message -->
+<div id="musicError">⚠️ Click anywhere to enable music</div>
 
 <!-- AUDIO -->
 <audio id="music" loop preload="auto">
-  <source src="music.mp3" type="audio/mpeg">
+    <source src="music.mp3" type="audio/mpeg">
+    <source src="music.mp3.mp3" type="audio/mpeg"> <!-- Backup for renamed file -->
+    Your browser does not support audio.
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
 // ELEMENTS
-const intro=document.getElementById("intro");
-const startBtn=document.getElementById("startBtn");
-const countdown=document.getElementById("countdown");
-const page1=document.getElementById("page1");
-const yes=document.getElementById("yes");
-const no=document.getElementById("no");
-const page2=document.getElementById("page2");
-const text=document.getElementById("text");
-const music=document.getElementById("music");
+const intro = document.getElementById("intro");
+const startBtn = document.getElementById("startBtn");
+const countdown = document.getElementById("countdown");
+const page1 = document.getElementById("page1");
+const yes = document.getElementById("yes");
+const no = document.getElementById("no");
+const page2 = document.getElementById("page2");
+const text = document.getElementById("text");
+const music = document.getElementById("music");
+const musicControl = document.getElementById("musicControl");
+const surpriseBtn = document.getElementById("surpriseBtn");
+const musicError = document.getElementById("musicError");
 
 // MESSAGE EXACT
-const msg=`Happy birthday aboura ❤️🥳️🎁
+const msg = `Happy birthday aboura ❤️🥳️🎁
 nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️
 rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️
 enjoy your happy day
 smile as much as you can cause you have the prettiest smile at all that i love so much❤️✨️💎
 and the red flower is that's how i see you🌹🌹`;
 
-// START BUTTON CLICK
-startBtn.addEventListener("click", ()=>{
-  intro.style.display="none";
-  countdown.style.display="flex";
+// Music state
+let isMusicPlaying = false;
+let musicEnabled = false;
 
-  // START MUSIC AFTER INTERACTION
-  music.play().catch(()=>{music.muted=true;music.play();music.muted=false;});
-
-  let count=3;
-  const interval=setInterval(()=>{
-    countdown.innerHTML=count;
-    count--;
-    if(count<0){
-      clearInterval(interval);
-      countdown.style.display="none";
-      page1.style.display="flex"; // <-- هنا page1 يظهر بعد العد
+// Function to play music with user interaction
+function playMusic() {
+    if (!musicEnabled) {
+        musicEnabled = true;
+        musicError.style.display = "none";
     }
-  },1000);
+    
+    music.volume = 0.5;
+    
+    let playPromise = music.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log("Music playing successfully");
+            isMusicPlaying = true;
+            musicControl.innerHTML = "🔊 Music On";
+        }).catch(error => {
+            console.log("Music play failed:", error);
+            isMusicPlaying = false;
+            musicControl.innerHTML = "🔇 Music Off";
+            
+            // Show error message
+            musicError.style.display = "block";
+            setTimeout(() => {
+                musicError.style.display = "none";
+            }, 3000);
+        });
+    }
+}
+
+// Function to toggle music
+function toggleMusic() {
+    if (isMusicPlaying) {
+        music.pause();
+        isMusicPlaying = false;
+        musicControl.innerHTML = "🔇 Music Off";
+    } else {
+        playMusic();
+    }
+}
+
+// Enable music on any user interaction (click/touch)
+function enableMusicOnInteraction() {
+    if (!musicEnabled) {
+        playMusic();
+    }
+    // Remove listeners after first interaction
+    document.removeEventListener('click', enableMusicOnInteraction);
+    document.removeEventListener('touchstart', enableMusicOnInteraction);
+}
+
+// Add interaction listeners for music
+document.addEventListener('click', enableMusicOnInteraction);
+document.addEventListener('touchstart', enableMusicOnInteraction);
+
+// START BUTTON CLICK
+startBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // Prevent triggering the document click
+    intro.style.display = "none";
+    countdown.style.display = "flex";
+    
+    // Show music control
+    musicControl.style.display = "block";
+    
+    // Try to play music
+    playMusic();
+
+    let count = 3;
+    const interval = setInterval(() => {
+        countdown.innerHTML = count;
+        count--;
+        
+        if (count < 0) {
+            clearInterval(interval);
+            countdown.style.display = "none";
+            page1.style.display = "flex";
+        }
+    }, 1000);
 });
 
 // YES CLICK
-yes.onclick=()=>{
-  page1.style.display="none";
-  page2.style.display="flex";
+yes.onclick = (e) => {
+    e.stopPropagation();
+    page1.style.display = "none";
+    page2.style.display = "flex";
 
-  confetti({particleCount:400,spread:180,origin:{y:0.6}});
-  createHearts();
-  typeWriter();
+    // Confetti
+    confetti({ particleCount: 400, spread: 180, origin: { y: 0.6 } });
+    
+    // More confetti after a delay
+    setTimeout(() => {
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.5, x: 0.3 } });
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.5, x: 0.7 } });
+    }, 500);
+
+    createHearts();
+    typeWriter();
+    
+    // Show surprise button after message
+    setTimeout(() => {
+        surpriseBtn.style.display = "block";
+    }, msg.length * 30 + 1000);
 };
 
-// NO ESCAPE
-no.addEventListener("mouseover",()=>{no.style.top=Math.random()*80+"%";no.style.left=Math.random()*80+"%";});
+// NO BUTTON - Escape effect
+let noClicks = 0;
+no.addEventListener("mouseover", (e) => {
+    if (noClicks < 5) {
+        const maxX = window.innerWidth - no.offsetWidth - 50;
+        const maxY = window.innerHeight - no.offsetHeight - 50;
+        
+        const randomX = Math.max(20, Math.min(maxX, Math.random() * maxX));
+        const randomY = Math.max(20, Math.min(maxY, Math.random() * maxY));
+        
+        no.style.position = 'absolute';
+        no.style.left = randomX + 'px';
+        no.style.top = randomY + 'px';
+        
+        noClicks++;
+    } else {
+        no.textContent = "Yes is better 😊";
+        no.style.background = "#ff4d6d";
+        no.style.transform = "scale(1.1)";
+    }
+});
+
+no.onclick = (e) => {
+    e.stopPropagation();
+    if (noClicks < 5) {
+        alert("Try again! 😊");
+        // Small confetti for fun
+        confetti({ particleCount: 50, spread: 50, origin: { y: 0.5 } });
+    } else {
+        yes.click(); // Click yes instead
+    }
+};
 
 // TYPEWRITER
-let i=0;
-function typeWriter(){if(i<msg.length){text.innerHTML+=msg.charAt(i);i++;setTimeout(typeWriter,25);}}
+let i = 0;
+function typeWriter() {
+    if (i < msg.length) {
+        text.innerHTML += msg.charAt(i);
+        i++;
+        setTimeout(typeWriter, 25);
+    } else {
+        // Extra confetti when done
+        confetti({ particleCount: 300, spread: 160, origin: { y: 0.6 } });
+    }
+}
 
 // HEARTS
-function createHearts(){
-  setInterval(()=>{
-    const heart=document.createElement('div');
-    heart.className='heart';
-    heart.innerHTML='❤️';
-    heart.style.left=Math.random()*100+'vw';
-    heart.style.fontSize=(20+Math.random()*30)+'px';
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),4000);
-  },250);
+function createHearts() {
+    setInterval(() => {
+        for (let j = 0; j < 2; j++) {
+            setTimeout(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = (15 + Math.random() * 30) + 'px';
+                heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+                document.body.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 6000);
+            }, j * 100);
+        }
+    }, 300);
 }
+
+// MUSIC CONTROL
+musicControl.onclick = (e) => {
+    e.stopPropagation();
+    toggleMusic();
+};
+
+// SURPRISE BUTTON
+surpriseBtn.onclick = (e) => {
+    e.stopPropagation();
+    // More confetti
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            confetti({
+                particleCount: 100,
+                spread: 120,
+                origin: { y: 0.6, x: i * 0.2 }
+            });
+        }, i * 200);
+    }
+};
+
+// PAGE 2 click for more confetti
+page2.onclick = (e) => {
+    if (page2.style.display === "flex") {
+        confetti({ particleCount: 50, spread: 80, origin: { y: 0.5 } });
+    }
+};
+
+// Handle visibility change (when user switches tabs)
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        if (isMusicPlaying) {
+            music.pause();
+        }
+    } else {
+        if (isMusicPlaying) {
+            playMusic();
+        }
+    }
+});
+
+// Preload images
+window.onload = () => {
+    // Preload images
+    const img1 = new Image();
+    img1.src = "image1.jpg";
+    const img2 = new Image();
+    img2.src = "image2.jpg";
+    
+    console.log("🎉 Birthday Surprise Ready! 🎉");
+};
+
+// Error handling for images
+window.onerror = function(msg, url, line) {
+    console.log("Error: " + msg + " at line " + line);
+    return false;
+};
 </script>
 </body>
 </html>
