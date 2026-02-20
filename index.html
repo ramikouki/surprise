@@ -23,7 +23,7 @@ overflow:hidden;
 color:white;
 }
 
-/* INTRO SCREEN */
+/* INTRO */
 .intro{
 position:fixed;
 width:100%;
@@ -63,16 +63,16 @@ justify-content:center;
 align-items:center;
 font-size:80px;
 z-index:90;
-animation:fadeIn 1s;
 }
 
-/* FIRST PAGE */
+/* PAGE 1 */
 .container{
 display:none;
 background:rgba(0,0,0,0.65);
 padding:40px;
 border-radius:25px;
 text-align:center;
+position:relative;
 }
 
 button{
@@ -101,7 +101,7 @@ color:white;
 position:absolute;
 }
 
-/* SECOND PAGE */
+/* PAGE 2 */
 .page2{
 display:none;
 height:100vh;
@@ -130,11 +130,6 @@ from{text-shadow:0 0 10px #ff4d6d;}
 to{text-shadow:0 0 25px #ff99aa;}
 }
 
-@keyframes fadeIn{
-from{opacity:0;}
-to{opacity:1;}
-}
-
 /* Hearts */
 .heart{
 position:absolute;
@@ -161,19 +156,22 @@ animation:floatUp 4s linear infinite;
 <!-- COUNTDOWN -->
 <div class="countdown" id="countdown">3</div>
 
-<!-- FIRST PAGE -->
+<!-- PAGE 1 -->
 <div class="container" id="page1">
 <h1>Are you ready for a surprise? 💖</h1>
 <button id="yes">Yes 😍</button>
 <button id="no">No 😅</button>
 </div>
 
-<!-- SECOND PAGE -->
+<!-- PAGE 2 -->
 <div class="page2" id="page2">
 <div class="message" id="text"></div>
 </div>
 
-<audio id="music" src="music.mp3" loop preload="auto" playsinline></audio>
+<!-- AUDIO -->
+<audio id="music" loop preload="auto">
+<source src="music.mp3" type="audio/mpeg">
+</audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -193,7 +191,7 @@ const msg=`Happy birthday aboura ❤️🥳🎂
 
 nchalah btoul la3mor w rabi ywaf9ek ❤️
 
-rani far7an 3ale5er eli rja3na s7ab ❤️❤️
+rani far7an barcha eli rja3na s7ab ❤️❤️
 
 enjoy your happy day 💫
 
@@ -201,10 +199,17 @@ you have the prettiest smile ❤️✨
 
 🌹🌹`;
 
-/* INTRO START */
-startBtn.onclick=()=>{
-music.currentTime=0;
-music.play();
+/* START CLICK */
+startBtn.addEventListener("click", async ()=>{
+
+try{
+await music.play();
+}catch(err){
+console.log("Autoplay blocked, retrying...");
+music.muted=true;
+await music.play();
+music.muted=false;
+}
 
 intro.style.display="none";
 countdown.style.display="flex";
@@ -221,7 +226,8 @@ countdown.style.display="none";
 page1.style.display="block";
 }
 },1000);
-};
+
+});
 
 /* YES CLICK */
 yes.onclick=()=>{
@@ -238,7 +244,7 @@ createHearts();
 typeWriter();
 };
 
-/* NO BUTTON ESCAPE */
+/* NO ESCAPE */
 no.addEventListener("mouseover",()=>{
 no.style.top=Math.random()*80+"%";
 no.style.left=Math.random()*80+"%";
