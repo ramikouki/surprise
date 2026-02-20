@@ -102,6 +102,7 @@ body {
     justify-content: center;
     position: relative;
     min-height: 100px;
+    width: 100%;
 }
 
 #page1 button {
@@ -117,6 +118,8 @@ body {
 #yes {
     background: #ff4d6d;
     color: white;
+    position: relative;
+    z-index: 10;
 }
 
 #yes:hover {
@@ -127,21 +130,22 @@ body {
 #no {
     background: #444;
     color: white;
-    position: relative;
-    transition: left 0.2s ease, top 0.2s ease; /* حركة سلسة */
+    position: absolute; /* عشان يتحرك بحرية */
+    transition: left 0.2s ease, top 0.2s ease;
+    z-index: 5;
 }
 
 #no:hover {
     background: #666;
 }
 
-/* PAGE 2 */
+/* PAGE 2 - مع الصورة image3 */
 #page2 {
     display: none;
     position: absolute;
     width: 100%;
     height: 100%;
-    background: url("image2.jpg") center/cover no-repeat;
+    background: url("image3") center/cover no-repeat; /* تغيير لـ image3 */
     justify-content: center;
     align-items: center;
     z-index: 2;
@@ -262,7 +266,7 @@ body {
     </div>
 </div>
 
-<!-- PAGE 2 -->
+<!-- PAGE 2 - باستخدام image3 -->
 <div id="page2">
     <div class="message" id="text"></div>
 </div>
@@ -293,18 +297,19 @@ const musicControl = document.getElementById("musicControl");
 const surpriseBtn = document.getElementById("surpriseBtn");
 
 // MESSAGE
-const msg = `Happy birthday aboura ❤️🥳️🎁
-nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️
-rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️
-enjoy your happy day
-smile as much as you can cause you have the prettiest smile at all that i love so much❤️✨️💎
-and the red flower is that's how i see you🌹🌹`;
+const msg = `Happy birthday aboura❤️💜😍  
+nchalah btoul la3mor w nchalah yarabi tousel leli t7eb 3lih w nchalah rabi ywaf9ek❤️  
+rani far7an 3ale5er eli rja3na s7ab w nchalah eli sar 9bal may3awedech ysir mara o5ra❤️❤️  
+enjoy your happy day  
+smile as much as you can cause you have the prettiest smile at all that i love so much❤️🌹🌹  
+and the red flower is that's how i see you✨✨`;
 
 // Music state
 let isMusicPlaying = false;
 let heartInterval = null;
 let typeTimer = null;
 let noMoveCount = 0;
+let noPosition = { x: 0, y: 0 };
 
 // Play music
 function playMusic() {
@@ -345,9 +350,10 @@ startBtn.addEventListener("click", () => {
             page1.style.display = "flex";
             
             // Reset no button position
-            no.style.position = "relative";
-            no.style.left = "0";
-            no.style.top = "0";
+            no.style.position = "absolute";
+            no.style.left = "50%";
+            no.style.top = "50%";
+            no.style.transform = "translate(-50%, -50%)";
         }
     }, 1000);
 });
@@ -371,7 +377,7 @@ yes.onclick = () => {
     // Hearts
     heartInterval = setInterval(createHeart, 400);
 
-    // Typewriter - أبطأ (80ms)
+    // Typewriter
     typeWriter();
     
     // Surprise button
@@ -380,64 +386,80 @@ yes.onclick = () => {
     }, 15000);
 };
 
-// NO BUTTON - يتحرك ولكن في حدود قريبة
+// NO BUTTON - يتحرك في مساحة أكبر (كل الشاشة)
 no.addEventListener("mouseover", () => {
-    if (noMoveCount < 8) { // يتحرك 8 مرات فقط
-        // مسافة صغيرة (ما تبعدش بزاف)
-        const moveX = (Math.random() * 60) - 30; // بين -30 و +30 بكسل
-        const moveY = (Math.random() * 40) - 20; // بين -20 و +20 بكسل
+    if (noMoveCount < 20) { // يتحرك 20 مرة (أكثر من قبل)
         
-        // نحافظ على الزر في مكانه النسبي
-        const currentLeft = parseFloat(no.style.left) || 0;
-        const currentTop = parseFloat(no.style.top) || 0;
+        // نحسب مساحة آمنة للحركة (نترك مسافة 50px من الحواف)
+        const maxX = window.innerWidth - no.offsetWidth - 50;
+        const maxY = window.innerHeight - no.offsetHeight - 50;
         
-        // نتأكد ما يخرجش من مساحة معقولة
-        let newLeft = currentLeft + moveX;
-        let newTop = currentTop + moveY;
+        // مسافة عشوائية في كل الشاشة
+        const randomX = 50 + Math.random() * maxX;
+        const randomY = 50 + Math.random() * maxY;
         
-        // نحدد المسافة القصوى (ما يبعدش أكثر من 100 بكسل)
-        newLeft = Math.max(-50, Math.min(50, newLeft));
-        newTop = Math.max(-40, Math.min(40, newTop));
-        
-        no.style.position = 'relative';
-        no.style.left = newLeft + 'px';
-        no.style.top = newTop + 'px';
+        no.style.position = 'absolute';
+        no.style.left = randomX + 'px';
+        no.style.top = randomY + 'px';
+        no.style.transform = 'none'; // نلغي التحويل
         
         noMoveCount++;
         
-        // تغيير النص بعد كم حركة
+        // تغيير النص تدريجياً
         if (noMoveCount === 5) {
             no.textContent = "Still no? 😅";
-        } else if (noMoveCount === 7) {
+        } else if (noMoveCount === 10) {
+            no.textContent = "Why not? 🥺";
+        } else if (noMoveCount === 15) {
             no.textContent = "Almost there! 😊";
+        } else if (noMoveCount === 18) {
+            no.textContent = "Last chance! 🎯";
         }
     } else {
-        // بعد 8 مرات، يوقف حركة ويدلك على Yes
+        // بعد 20 حركة، يوقف حركة ويدلك على Yes
         no.textContent = "Click Yes! 💖";
         no.style.background = "#ff4d6d";
-        no.style.transform = "scale(1.1)";
+        no.style.transform = "scale(1.2)";
+        no.style.boxShadow = "0 0 30px #ff4d6d";
+        
+        // نحرك الزر قريب من Yes
+        const yesRect = yes.getBoundingClientRect();
+        no.style.left = (yesRect.left - 100) + 'px';
+        no.style.top = (yesRect.top + 20) + 'px';
         
         // ومضة للـ Yes
-        yes.style.transform = "scale(1.2)";
-        yes.style.boxShadow = "0 0 30px #ff4d6d";
+        yes.style.transform = "scale(1.3)";
+        yes.style.boxShadow = "0 0 40px #ff4d6d";
         setTimeout(() => {
             yes.style.transform = "scale(1)";
             yes.style.boxShadow = "none";
-        }, 500);
+        }, 800);
     }
 });
 
 no.onclick = () => {
-    if (noMoveCount < 8) {
+    if (noMoveCount < 20) {
         // كونفيتي صغير
         confetti({ particleCount: 30, spread: 50, origin: { y: 0.5 } });
         
-        // رسالة صغيرة
-        alert("Keep trying! 😊");
+        // نزيد عدد الحركات عشان يقترب من النهاية
+        noMoveCount = Math.min(noMoveCount + 3, 19);
         
-        // نحرك الزر شوي
-        noMoveCount = 6; // نجعله يقترب من النهاية
-        no.textContent = "Getting closer! 🎯";
+        if (noMoveCount >= 18) {
+            no.textContent = "So close! 🎯";
+        } else {
+            alert("Keep trying! 😊");
+        }
+        
+        // نحرك الزر لمكان عشوائي
+        const maxX = window.innerWidth - no.offsetWidth - 50;
+        const maxY = window.innerHeight - no.offsetHeight - 50;
+        const randomX = 50 + Math.random() * maxX;
+        const randomY = 50 + Math.random() * maxY;
+        
+        no.style.left = randomX + 'px';
+        no.style.top = randomY + 'px';
+        
     } else {
         // بعد ما كمل حركاته، الضغط على no يشغل yes
         yes.click();
@@ -511,7 +533,7 @@ window.onbeforeunload = () => {
 };
 
 window.onload = () => {
-    console.log("🎉 Ready! 🎉");
+    console.log("🎉 Ready with image3! 🎉");
 };
 </script>
 </body>
