@@ -119,7 +119,6 @@ body {
     background: #ff4d6d;
     color: white;
     position: relative;
-    z-index: 10;
 }
 
 #yes:hover {
@@ -130,8 +129,8 @@ body {
 #no {
     background: #444;
     color: white;
-    position: absolute; /* عشان يتحرك بحرية */
-    transition: left 0.2s ease, top 0.2s ease;
+    position: absolute;
+    transition: left 0.1s ease, top 0.1s ease;
 }
 
 #no:hover {
@@ -290,7 +289,6 @@ body {
 <!-- AUDIO -->
 <audio id="music" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
-    <source src="music.mp3.mp3" type="audio/mpeg">
 </audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -360,15 +358,16 @@ startBtn.addEventListener("click", () => {
             countdown.style.display = "none";
             page1.style.display = "flex";
             
-            // وضع زر No في مكانه الأصلي - مباشرة بعد Page1 تظهر
+            // NO button position initiale à côté de YES
             setTimeout(() => {
                 const yesRect = yes.getBoundingClientRect();
                 no.style.position = 'absolute';
-                no.style.left = (yesRect.right + 20) + 'px'; // على يمين Yes بمسافة 20px
+                no.style.left = (yesRect.right + 20) + 'px';
                 no.style.top = yesRect.top + 'px';
                 no.style.transform = 'none';
-                console.log("No button placed next to Yes");
-            }, 100); // تأخير صغير عشان التأكد أن Page1 ظهرت
+                noMoveCount = 0;
+                no.textContent = "No 😅";
+            }, 100);
         }
     }, 1000);
 });
@@ -378,118 +377,90 @@ yes.onclick = () => {
     page1.style.display = "none";
     page2.style.display = "flex";
 
-    // Music
     playMusic();
     musicControl.style.display = "block";
 
-    // Confetti
     confetti({ particleCount: 200, spread: 160, origin: { y: 0.6 } });
     
     setTimeout(() => {
         confetti({ particleCount: 100, spread: 100, origin: { y: 0.5, x: 0.3 } });
     }, 300);
 
-    // Hearts
     heartInterval = setInterval(createHeart, 400);
 
-    // Typewriter
     typeWriter();
     
-    // Surprise button
     setTimeout(() => {
         surpriseBtn.style.display = "block";
     }, 15000);
 };
 
-// NO BUTTON - يتحرك في مساحة ±100 بكسل
+// NO BUTTON - يتحرك في أي مكان في الصفحة (lag fel page le5ra)
 no.addEventListener("mouseover", () => {
     if (noMoveCount < 20) {
-        
-        // الموقع الحالي للزر
+        // حساب الموقع الحالي
         const currentLeft = parseFloat(no.style.left) || (yes.getBoundingClientRect().right + 20);
         const currentTop = parseFloat(no.style.top) || yes.getBoundingClientRect().top;
         
-        // مساحة ±100 من الموقع الحالي
-        const randomX = currentLeft + (Math.random() * 200 - 100);
-        const randomY = currentTop + (Math.random() * 200 - 100);
+        // توليد موقع جديد بناءً على الموقع الحالي +- 50px
+        let newLeft = currentLeft + (Math.random() * 100 - 50); // +-50px
+        let newTop = currentTop + (Math.random() * 100 - 50); // +-50px
         
-        // نتأكد ما يخرجش من الشاشة
-        const safeX = Math.max(20, Math.min(window.innerWidth - no.offsetWidth - 20, randomX));
-        const safeY = Math.max(20, Math.min(window.innerHeight - no.offsetHeight - 20, randomY));
+        // التأكد أن الزر يبقى داخل الشاشة
+        newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - no.offsetWidth));
+        newTop = Math.max(0, Math.min(newTop, window.innerHeight - no.offsetHeight));
         
-        no.style.position = 'absolute';
-        no.style.left = safeX + 'px';
-        no.style.top = safeY + 'px';
-        no.style.transform = 'none';
-        
+        no.style.left = newLeft + 'px';
+        no.style.top = newTop + 'px';
         noMoveCount++;
-        
-        // تغيير النص تدريجياً
-        if (noMoveCount === 1) {
-            no.textContent = "Still no? 😅";
-        } else if (noMoveCount === 2) {
-            no.textContent = "Why not? 🥺";
-        } else if (noMoveCount === 3) {
-            no.textContent = "Almost there! 😊";
-        } else if (noMoveCount === 4) {
-            no.textContent = "Last chance! 🎯";
-        }
+
+        // تغيير النص حسب عدد المرات
+        if (noMoveCount === 1) no.textContent = "Still no? 😅";
+        else if (noMoveCount === 2) no.textContent = "Why not? 🥺";
+        else if (noMoveCount === 3) no.textContent = "Almost there! 😊";
+        else if (noMoveCount === 4) no.textContent = "Last chance! 🎯";
+        else if (noMoveCount > 4 && noMoveCount < 20) no.textContent = "Try again! 😄";
     } else {
-        // بعد 20 حركة، يوقف حركة ويدلك على Yes
         no.textContent = "Click Yes! 💖";
         no.style.background = "#ff4d6d";
         no.style.transform = "scale(1.2)";
         no.style.boxShadow = "0 0 30px #ff4d6d";
-        
-        // نحرك الزر قريب من Yes
+
+        // وضعه بجوار YES
         const yesRect = yes.getBoundingClientRect();
-        no.style.left = (yesRect.left - 100) + 'px';
-        no.style.top = (yesRect.top + 20) + 'px';
-        
-        // ومضة للـ Yes
-        yes.style.transform = "scale(1.3)";
-        yes.style.boxShadow = "0 0 40px #ff4d6d";
-        setTimeout(() => {
-            yes.style.transform = "scale(1)";
-            yes.style.boxShadow = "none";
-        }, 800);
+        no.style.left = (yesRect.right + 10) + 'px';
+        no.style.top = yesRect.top + 'px';
     }
 });
 
 no.onclick = () => {
     if (noMoveCount < 20) {
-        // كونفيتي صغير
         confetti({ particleCount: 30, spread: 50, origin: { y: 0.5 } });
-        
-        // نزيد عدد الحركات عشان يقترب من النهاية
         noMoveCount = Math.min(noMoveCount + 3, 19);
+
+        if (noMoveCount >= 18) no.textContent = "So close! 🎯";
         
-        if (noMoveCount >= 18) {
-            no.textContent = "So close! 🎯";
-        } else {
-            alert("Keep trying! 😊");
-        }
+        // حساب الموقع الحالي
+        const currentLeft = parseFloat(no.style.left) || (yes.getBoundingClientRect().right + 20);
+        const currentTop = parseFloat(no.style.top) || yes.getBoundingClientRect().top;
         
-        // نحرك الزر في مساحة ±100 من موقعه الحالي
-        const currentLeft = parseFloat(no.style.left);
-        const currentTop = parseFloat(no.style.top);
+        // توليد موقع جديد +- 50px
+        let newLeft = currentLeft + (Math.random() * 100 - 50);
+        let newTop = currentTop + (Math.random() * 100 - 50);
         
-        const randomX = currentLeft + (Math.random() * 200 - 100);
-        const randomY = currentTop + (Math.random() * 200 - 100);
+        // التأكد أن الزر يبقى داخل الشاشة
+        newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - no.offsetWidth));
+        newTop = Math.max(0, Math.min(newTop, window.innerHeight - no.offsetHeight));
         
-        const safeX = Math.max(20, Math.min(window.innerWidth - no.offsetWidth - 20, randomX));
-        const safeY = Math.max(20, Math.min(window.innerHeight - no.offsetHeight - 20, randomY));
-        
-        no.style.left = safeX + 'px';
-        no.style.top = safeY + 'px';
+        no.style.left = newLeft + 'px';
+        no.style.top = newTop + 'px';
         
     } else {
-        // بعد ما كمل حركاته، الضغط على no يشغل yes
         yes.click();
     }
 };
 
-// TYPEWRITER - أبطأ (80ms)
+// TYPEWRITER - أسرع (40ms بدل 80ms)
 let i = 0;
 function typeWriter() {
     if (typeTimer) clearTimeout(typeTimer);
@@ -498,12 +469,11 @@ function typeWriter() {
         if (i < msg.length) {
             text.innerHTML += msg.charAt(i);
             i++;
-            typeTimer = setTimeout(writeNext, 80);
+            typeTimer = setTimeout(writeNext, 40); // أسرع بمرتين
         } else {
             confetti({ particleCount: 150, spread: 120, origin: { y: 0.6 } });
         }
     }
-    
     writeNext();
 }
 
@@ -518,9 +488,7 @@ function createHeart() {
     heart.style.color = '#ff4d6d';
     document.body.appendChild(heart);
     
-    setTimeout(() => {
-        if (heart && heart.remove) heart.remove();
-    }, 5000);
+    setTimeout(() => { if (heart && heart.remove) heart.remove(); }, 5000);
 }
 
 // MUSIC CONTROL
