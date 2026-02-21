@@ -365,7 +365,7 @@ startBtn.addEventListener("click", () => {
                 const yesRect = yes.getBoundingClientRect();
                 no.style.position = 'absolute';
                 no.style.left = (yesRect.right + 20) + 'px'; // على يمين Yes بمسافة 20px
-                no.style.top = (yesRect.top - 40 ) + 'px';
+                no.style.top = (yesRect.top - 60 ) + 'px';
                 no.style.transform = 'none';
                 console.log("No button placed next to Yes");
             }, 100); // تأخير صغير عشان التأكد أن Page1 ظهرت
@@ -561,6 +561,7 @@ window.onload = () => {
 </script>
 </body>
 </html>
+
 
 
 
