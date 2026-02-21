@@ -406,7 +406,7 @@ no.addEventListener("mouseover", () => {
     if (noMoveCount < 20) {
         
         // الموقع الحالي للزر
-        const currentLeft = parseFloat(no.style.left) || (yes.getBoundingClientRect().right + 10);
+        const currentLeft = parseFloat(no.style.left) || (yes.getBoundingClientRect().right - 10);
         const currentTop = parseFloat(no.style.top) || yes.getBoundingClientRect().top;
         
         // مساحة ±100 من الموقع الحالي
@@ -561,6 +561,7 @@ window.onload = () => {
 </script>
 </body>
 </html>
+
 
 
 
