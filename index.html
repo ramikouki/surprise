@@ -410,8 +410,8 @@ no.addEventListener("mouseover", () => {
         const currentTop = parseFloat(no.style.top) || yes.getBoundingClientRect().top;
         
         // مساحة ±100 من الموقع الحالي
-        const randomX = currentLeft + (Math.random() * 200 - 100);
-        const randomY = currentTop + (Math.random() * 200 - 100);
+        const randomX = currentLeft + (Math.random() * 200 - 150);
+        const randomY = currentTop + (Math.random() * 200 - 150);
         
         // نتأكد ما يخرجش من الشاشة
         const safeX = Math.max(20, Math.min(window.innerWidth - no.offsetWidth - 20, randomX));
@@ -425,13 +425,13 @@ no.addEventListener("mouseover", () => {
         noMoveCount++;
         
         // تغيير النص تدريجياً
-        if (noMoveCount === 5) {
+        if (noMoveCount === 1) {
             no.textContent = "Still no? 😅";
-        } else if (noMoveCount === 10) {
+        } else if (noMoveCount === 2) {
             no.textContent = "Why not? 🥺";
-        } else if (noMoveCount === 15) {
+        } else if (noMoveCount === 3) {
             no.textContent = "Almost there! 😊";
-        } else if (noMoveCount === 18) {
+        } else if (noMoveCount === 4) {
             no.textContent = "Last chance! 🎯";
         }
     } else {
@@ -474,8 +474,8 @@ no.onclick = () => {
         const currentLeft = parseFloat(no.style.left);
         const currentTop = parseFloat(no.style.top);
         
-        const randomX = currentLeft + (Math.random() * 200 - 100);
-        const randomY = currentTop + (Math.random() * 200 - 100);
+        const randomX = currentLeft + (Math.random() * 200 - 150);
+        const randomY = currentTop + (Math.random() * 200 - 150);
         
         const safeX = Math.max(20, Math.min(window.innerWidth - no.offsetWidth - 20, randomX));
         const safeY = Math.max(20, Math.min(window.innerHeight - no.offsetHeight - 20, randomY));
@@ -498,7 +498,7 @@ function typeWriter() {
         if (i < msg.length) {
             text.innerHTML += msg.charAt(i);
             i++;
-            typeTimer = setTimeout(writeNext, 80);
+            typeTimer = setTimeout(writeNext, 40);
         } else {
             confetti({ particleCount: 150, spread: 120, origin: { y: 0.6 } });
         }
@@ -561,3 +561,4 @@ window.onload = () => {
 </script>
 </body>
 </html>
+
